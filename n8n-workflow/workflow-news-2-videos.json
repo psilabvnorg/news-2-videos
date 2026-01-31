@@ -1,0 +1,977 @@
+{
+  "name": "workflow-news-2-videos",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        0
+      ],
+      "id": "eeb37fcf-b530-40f9-8163-1752cd84dbe8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/x/Desktop/ai-content-tiktok \npwd\nvenv/bin/python3 src/main.py --url \"{{ $('Get Task').item.json.news_link }}\" --dir \"/home/x/Desktop/news-2-videos/public/main/{{ $('Get Task').item.json.run_id }}/audio\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        -144
+      ],
+      "id": "40fd112c-c83f-4dfe-a721-dea9ee83e888",
+      "name": "Audio Summarizatioon"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs",
+          "mode": "list",
+          "cachedResultName": "job_config",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "job\n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "pending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1248,
+        0
+      ],
+      "id": "af15d1f4-6537-40ed-8e34-b48042475cb4",
+      "name": "Get Task",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WicuSG5kqdizNxaU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs",
+          "mode": "list",
+          "cachedResultName": "job_config",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "job\n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "audio_path": "={{ \n  $json.stdout.match(/\\/home\\/.*?\\.mp3/g)?.slice(-1)[0] \n}}",
+            "run_id": "={{ $('Get Task').item.json.run_id }}"
+          },
+          "matchingColumns": [
+            "run_id"
+          ],
+          "schema": [
+            {
+              "id": "index",
+              "displayName": "index",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "news_link",
+              "displayName": "news_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "audio_path",
+              "displayName": "audio_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "template",
+              "displayName": "template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ratio",
+              "displayName": "ratio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "intro_path",
+              "displayName": "intro_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "content_path",
+              "displayName": "content_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "output_path",
+              "displayName": "output_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        -144
+      ],
+      "id": "f7c7cfb8-6dfd-4d37-a487-9f398a49813e",
+      "name": "Update Sheet with Audio Path",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WicuSG5kqdizNxaU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "run_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1024,
+        0
+      ],
+      "id": "74d803f4-0a15-4cbb-9d21-681fc337e6a8",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "f5e0097a-d0cd-4c71-92ad-375b5d9de64a",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/x/Desktop/news-2-videos\n\nnode sub.mjs {{ $('Get Task').item.json.audio_path }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        496,
+        -160
+      ],
+      "id": "e00367b3-be45-41f8-a207-fe36681549df",
+      "name": "Add Subtitle"
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/x/Desktop/news-2-videos\nsudo chown -R x:x /home/x\n\nnode render.js --tagline \"{{ $json.tagline }}\" --title \"{{ $json.title }}\" --template {{ $('Get Task').item.json.template }} --intro {{ $json.intro_duration }} --content main/{{ $('Get Task').item.json.run_id }} -o public/main/{{ $('Get Task').item.json.run_id }}/output.mp4\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        32
+      ],
+      "id": "2106e789-9509-44a9-abf1-7d3436a9e8af",
+      "name": "Render"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs",
+          "mode": "list",
+          "cachedResultName": "job_config",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "job\n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $('Get Task').item.json.run_id }}",
+            "subtitle_path": "={{ $json.stdout\n  .match(/Processing file (.+)\\.mp3/)[1] + '.json'\n}}"
+          },
+          "matchingColumns": [
+            "run_id"
+          ],
+          "schema": [
+            {
+              "id": "index",
+              "displayName": "index",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "news_link",
+              "displayName": "news_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "audio_path",
+              "displayName": "audio_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subtitle_path",
+              "displayName": "subtitle_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "template",
+              "displayName": "template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ratio",
+              "displayName": "ratio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "intro_path",
+              "displayName": "intro_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "content_path",
+              "displayName": "content_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "output_path",
+              "displayName": "output_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        704,
+        -160
+      ],
+      "id": "a4b261ed-bf43-482c-ab7d-b5972b4f7f2b",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WicuSG5kqdizNxaU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=mkdir -p /home/x/Desktop/news-2-videos/public/main/{{ $json.run_id }}/audio"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -80
+      ],
+      "id": "445320b5-2fb3-4dd3-bc09-25974bbf9c25",
+      "name": "Create Folder"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs",
+          "mode": "list",
+          "cachedResultName": "job_config",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "job\n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output_path": "=/home/x/Desktop/news-2-videos/public/main/{{ $('Get Task').item.json.run_id }}/output.mp4",
+            "status": "done",
+            "run_id": "={{ $('Get Task').item.json.run_id }}"
+          },
+          "matchingColumns": [
+            "run_id"
+          ],
+          "schema": [
+            {
+              "id": "index",
+              "displayName": "index",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "news_link",
+              "displayName": "news_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "audio_path",
+              "displayName": "audio_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "subtitle_path",
+              "displayName": "subtitle_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "template",
+              "displayName": "template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ratio",
+              "displayName": "ratio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "intro_path",
+              "displayName": "intro_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "content_path",
+              "displayName": "content_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "output_path",
+              "displayName": "output_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1280,
+        16
+      ],
+      "id": "212a1a49-10e5-4ff9-90a4-fb152b43b5f3",
+      "name": "Done",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WicuSG5kqdizNxaU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e47c8237-6d01-4abf-971f-812c73ad1ea4",
+              "leftValue": "={{ $('Get Task').item.json.audio_path }}",
+              "rightValue": "mp3",
+              "operator": {
+                "type": "string",
+                "operation": "notEndsWith"
+              }
+            },
+            {
+              "id": "eee74981-19f9-4b3f-ac7f-14474ac1b3cd",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "614ca22c-b6da-411c-92ec-a1ea888ace00",
+      "name": "Check Audio Exist"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e47c8237-6d01-4abf-971f-812c73ad1ea4",
+              "leftValue": "={{ $('Get Task').item.json.subtitle_path }}",
+              "rightValue": "json",
+              "operator": {
+                "type": "string",
+                "operation": "notEndsWith"
+              }
+            },
+            {
+              "id": "eee74981-19f9-4b3f-ac7f-14474ac1b3cd",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        256,
+        -16
+      ],
+      "id": "d8073a97-4bf5-46e4-b176-f811a5417baf",
+      "name": "Check Subtitle Exist"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs",
+          "mode": "list",
+          "cachedResultName": "job_config",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "job\n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVEjdBXqbUSAENcpEC8qB1wwGdlG_5HNGcPuECv9QFs/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "run_id",
+              "lookupValue": "={{ $('Get Task').item.json.run_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        -16
+      ],
+      "id": "24d8423a-c865-45c5-afa3-4b5f2bc8a721",
+      "name": "Get Audio Path",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WicuSG5kqdizNxaU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f44a7209-f89e-4eec-8d39-43c38e3ff3bd",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1472,
+        0
+      ],
+      "id": "531b49b9-f209-48a9-a968-05fef4b6a648",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Task": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Summarizatioon": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet with Audio Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet with Audio Path": {
+      "main": [
+        [
+          {
+            "node": "Check Subtitle Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Subtitle": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get Audio Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Folder": {
+      "main": [
+        [
+          {
+            "node": "Check Audio Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Done": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Audio Exist": {
+      "main": [
+        [
+          {
+            "node": "Audio Summarizatioon",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Subtitle Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Subtitle Exist": {
+      "main": [
+        [
+          {
+            "node": "Add Subtitle",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Audio Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio Path": {
+      "main": [
+        [
+          {
+            "node": "Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "0980abc6-f6e4-4d02-8999-f10f68e10d8f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "161f6ace8aef0e41d520bb593f985178df69120d9c607fe563976f1629d3b4c5"
+  },
+  "id": "CfUb98yAN_wYFWnuP3aeD",
+  "tags": []
+}
