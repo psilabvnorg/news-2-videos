@@ -1,8 +1,7 @@
 import { AbsoluteFill, Audio, Sequence, useVideoConfig } from 'remotion';
 import { z } from 'zod';
 import { IntroOverlay, introSchema } from '../Intro';
-import { ImageSlide } from '../components/ImageSlide';
-import { VideoSlide } from '../components/VideoSlide';
+import { LoopingImageSlider } from '../components/LoopingImageSlider';
 import { CaptionDisplay } from '../components/CaptionDisplay';
 import type { Caption } from '@remotion/captions';
 import { getFirstAudioFromDirectory } from '../utils/getStaticAssets';
@@ -38,8 +37,6 @@ export type MainVideoProps = z.infer<typeof mainVideoSchema>;
 export const MainVideo: React.FC<MainVideoProps> = ({
   introProps,
   images,
-  videos,
-  videoDurations,
   audioSrc,
   captions,
   introDurationInFrames,
@@ -52,68 +49,32 @@ export const MainVideo: React.FC<MainVideoProps> = ({
   const effectiveIntroDuration = isBackgroundMode ? totalDuration : introDurationInFrames;
 
   // Calculate frame positions for media content
-  let currentFrame = 0;
-
   // In background mode, media starts from frame 0
   // In normal mode, media starts after intro
   const mediaStartFrame = isBackgroundMode ? 0 : introDurationInFrames;
-  currentFrame = mediaStartFrame;
-
-  // Image sequences
-  const imageSequences = images.map((src) => {
-    const from = currentFrame;
-    currentFrame += imageDurationInFrames;
-    return { src, from, durationInFrames: imageDurationInFrames };
-  });
-
-  // Video sequences
-  const videoSequences = videos.map((src, index) => {
-    const from = currentFrame;
-    const durationInFrames = videoDurations[index];
-    currentFrame += durationInFrames;
-    return { src, from, durationInFrames };
-  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#000' }}>
       {/* ========== LAYER 3 (BOTTOM): Images and Videos ========== */}
       <AbsoluteFill style={{ zIndex: 1 }}>
-        {/* Image Sequences with Pan and Zoom */}
-        {imageSequences.map((seq, index) => (
-          <Sequence
-            key={`image-${index}`}
-            from={seq.from}
-            durationInFrames={seq.durationInFrames}
-          >
-            <ImageSlide src={seq.src} durationInFrames={seq.durationInFrames} isBackgroundMode={isBackgroundMode} />
-          </Sequence>
-        ))}
-
-        {/* Video Sequences */}
-        {videoSequences.map((seq, index) => (
-          <Sequence
-            key={`video-${index}`}
-            from={seq.from}
-            durationInFrames={seq.durationInFrames}
-          >
-            <VideoSlide src={seq.src} durationInFrames={seq.durationInFrames} isBackgroundMode={isBackgroundMode} />
-          </Sequence>
-        ))}
+        <LoopingImageSlider
+          images={images}
+          startFrame={mediaStartFrame}
+          totalDurationInFrames={totalDuration}
+          slideDurationInFrames={imageDurationInFrames}
+          isBackgroundMode={isBackgroundMode}
+        />
       </AbsoluteFill>
 
       {/* ========== LAYER 2 (MIDDLE): Background Overlay from Intro ========== */}
       {/* ========== LAYER 1 (TOP): Text, Icons, Logo from Intro ========== */}
-      <Sequence
-        from={0}
-        durationInFrames={effectiveIntroDuration}
-        layout="none"
-      >
+      <Sequence durationInFrames={effectiveIntroDuration} layout="none">
         <IntroOverlay {...introProps} isBackgroundMode={isBackgroundMode} />
       </Sequence>
 
       {/* ========== AUDIO LAYERS ========== */}
-      {/* Voice/Narration Audio - Loops to play for entire video */}
-      {audioSrc && <Audio src={audioSrc} loop />}
+      {/* Voice/Narration Audio */}
+      {audioSrc && <Audio src={audioSrc} />}
 
       {/* Background Music - Loops to play for entire video */}
       {(() => {
@@ -130,7 +91,7 @@ export const MainVideo: React.FC<MainVideoProps> = ({
         <AbsoluteFill style={{ zIndex: 100 }}>
           <CaptionDisplay
             captions={captions as Caption[]}
-            introDurationInFrames={isBackgroundMode ? 0 : introDurationInFrames}
+            introDurationInFrames={0}
           />
         </AbsoluteFill>
       )}

@@ -24,12 +24,9 @@ export const getAssetsFromDirectory = (
     // Normalize directory path (remove leading/trailing slashes)
     const normalizedDir = directory.replace(/^\/|\/$/g, '');
 
-    // Filter files by directory - handle /public/ prefix and leading slashes
+    // Filter files by directory using file.name (relative path from public/)
     const filesInDir = allFiles.filter((file) => {
-      // Remove leading slash and /public/ prefix if present
-      const filePath = file.src.replace(/^\//, '').replace(/^public\//, '');
-      // Check if file is in this directory
-      return filePath.startsWith(normalizedDir + '/');
+      return file.name.startsWith(normalizedDir + '/');
     });
 
     // Filter by type if specified
@@ -37,18 +34,16 @@ export const getAssetsFromDirectory = (
     if (type !== 'all') {
       const extensions = getExtensionsForType(type);
       filteredFiles = filesInDir.filter((file) => {
-        const ext = getFileExtension(file.src).toLowerCase();
+        const ext = getFileExtension(file.name).toLowerCase();
         return extensions.includes(ext);
       });
     }
 
     // Sort files alphabetically and return paths
     const result = filteredFiles
-      .sort((a, b) => a.src.localeCompare(b.src))
+      .sort((a, b) => a.name.localeCompare(b.name))
       .map((file) => {
-        // Remove leading slash and /public/ prefix for staticFile
-        const cleanPath = file.src.replace(/^\//, '').replace(/^public\//, '');
-        return staticFile(cleanPath);
+        return staticFile(file.name);
       });
 
     return result;
@@ -63,6 +58,19 @@ export const getAssetsFromDirectory = (
  */
 export const getImagesFromDirectory = (directory: string): string[] => {
   return getAssetsFromDirectory(directory, 'image');
+};
+
+/**
+ * Get slider images for a content directory.
+ * Prefers `${contentDirectory}/image` and falls back to `${contentDirectory}`.
+ */
+export const getSliderImagesForContentDirectory = (contentDirectory: string): string[] => {
+  const imagesInSubdirectory = getImagesFromDirectory(`${contentDirectory}/image`);
+  if (imagesInSubdirectory.length > 0) {
+    return imagesInSubdirectory;
+  }
+
+  return getImagesFromDirectory(contentDirectory);
 };
 
 /**
@@ -103,13 +111,11 @@ export const getCaptionFileForAudio = (audioPath: string | null, directory: stri
     const normalizedDir = directory.replace(/^\//, '').replace(/^public\//, '').replace(/\/$/g, '');
     
     const jsonFile = allFiles.find((file) => {
-      const filePath = file.src.replace(/^\//, '').replace(/^public\//, '');
-      return filePath.startsWith(normalizedDir + '/') && filePath.endsWith(expectedJsonName);
+      return file.name.startsWith(normalizedDir + '/') && file.name.endsWith(expectedJsonName);
     });
-    
+
     if (jsonFile) {
-      const cleanPath = jsonFile.src.replace(/^\//, '').replace(/^public\//, '');
-      return staticFile(cleanPath);
+      return staticFile(jsonFile.name);
     }
     
     return null;
