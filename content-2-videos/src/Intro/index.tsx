@@ -1,4 +1,4 @@
-import { AbsoluteFill, Audio, Img, staticFile } from 'remotion';
+import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { z } from 'zod';
 import { zColor } from '@remotion/zod-types';
@@ -508,44 +508,6 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = (props) => {
           </div>
         )}
       </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
-
-/**
- * Intro - Standalone intro component (for Intro composition)
- * Includes background image and audio
- */
-export const Intro: React.FC<IntroProps> = (props) => {
-  const assets = useTemplateAssets(props);
-
-  return (
-    <AbsoluteFill>
-      {/* Background Music */}
-      {props.enableAudio && assets.backgroundMusic && (
-        <Audio src={assets.backgroundMusic} volume={() => props.audioVolume} />
-      )}
-
-      {/* Background Image (Photo) - Layer 3 equivalent for standalone */}
-      {props.backgroundImage && (
-        <AbsoluteFill style={{ zIndex: 0 }}>
-          <Img
-            src={
-              props.backgroundImage.startsWith('http') || props.backgroundImage.startsWith('/')
-                ? props.backgroundImage
-                : staticFile(props.backgroundImage)
-            }
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </AbsoluteFill>
-      )}
-
-      {/* Overlay layers (gradient + content) */}
-      <IntroOverlay {...props} isBackgroundMode={false} />
     </AbsoluteFill>
   );
 };
