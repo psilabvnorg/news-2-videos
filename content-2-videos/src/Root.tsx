@@ -156,6 +156,7 @@ export const RemotionRoot: React.FC = () => {
           videos: [],
           videoDurations: [],
           captions: [],
+          backgroundMode: false,
           introDurationInFrames: 150,
           imageDurationInFrames: 170,
         }}

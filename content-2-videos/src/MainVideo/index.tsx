@@ -27,8 +27,8 @@ export const mainVideoSchema = z.object({
   captions: z.array(z.any()).optional().describe('Optional captions array'),
 
   // Timing
-  // When introDurationInFrames is 0, intro overlay plays for entire video (background mode)
-  introDurationInFrames: z.number().describe('Intro duration in frames (0 = intro plays entire video as overlay)'),
+  backgroundMode: z.boolean().default(false).describe('When true, intro overlay stays for entire video with images playing behind'),
+  introDurationInFrames: z.number().describe('Intro duration in frames (only used when backgroundMode is false)'),
   imageDurationInFrames: z.number().describe('Duration per image in frames'),
 });
 
@@ -39,19 +39,16 @@ export const MainVideo: React.FC<MainVideoProps> = ({
   images,
   audioSrc,
   captions,
+  backgroundMode = false,
   introDurationInFrames,
   imageDurationInFrames,
 }) => {
   const { durationInFrames: totalDuration } = useVideoConfig();
 
-  // Determine if intro should play for entire video (background mode)
-  const isBackgroundMode = introDurationInFrames === 0;
-  const effectiveIntroDuration = isBackgroundMode ? totalDuration : introDurationInFrames;
-
-  // Calculate frame positions for media content
-  // In background mode, media starts from frame 0
-  // In normal mode, media starts after intro
-  const mediaStartFrame = isBackgroundMode ? 0 : introDurationInFrames;
+  // Background mode: intro overlay stays for entire video, images play behind
+  // Normal mode: intro plays for introDurationInFrames, then disappears
+  const effectiveIntroDuration = backgroundMode ? totalDuration : introDurationInFrames;
+  const mediaStartFrame = backgroundMode ? 0 : introDurationInFrames;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#000' }}>
@@ -62,14 +59,14 @@ export const MainVideo: React.FC<MainVideoProps> = ({
           startFrame={mediaStartFrame}
           totalDurationInFrames={totalDuration}
           slideDurationInFrames={imageDurationInFrames}
-          isBackgroundMode={isBackgroundMode}
+          isBackgroundMode={backgroundMode}
         />
       </AbsoluteFill>
 
       {/* ========== LAYER 2 (MIDDLE): Background Overlay from Intro ========== */}
       {/* ========== LAYER 1 (TOP): Text, Icons, Logo from Intro ========== */}
       <Sequence durationInFrames={effectiveIntroDuration} layout="none">
-        <IntroOverlay {...introProps} isBackgroundMode={isBackgroundMode} />
+        <IntroOverlay {...introProps} isBackgroundMode={backgroundMode} />
       </Sequence>
 
       {/* ========== AUDIO LAYERS ========== */}

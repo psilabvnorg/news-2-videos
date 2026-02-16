@@ -1,4 +1,5 @@
 import type { CalculateMetadataFunction } from 'remotion';
+import { staticFile } from 'remotion';
 import { getAudioDuration } from '../utils/getAudioDuration';
 import {
   getSliderImagesForContentDirectory,
@@ -8,14 +9,47 @@ import {
 import { normalizeCaptions } from '../utils/normalizeCaptions';
 import type { MainVideoProps } from './index';
 
+/**
+ * Load a JSON config file from {contentDirectory}/config/{filename}
+ * Returns the parsed config or null if not found
+ */
+const loadJsonConfig = async (contentDirectory: string, filename: string): Promise<Record<string, unknown> | null> => {
+  try {
+    const configPath = staticFile(`${contentDirectory}/config/${filename}`);
+    const response = await fetch(configPath + `?t=${Date.now()}`);
+    if (response.ok) {
+      const config = await response.json();
+      console.log(`Loaded config from: ${configPath}`);
+      return config;
+    }
+  } catch (error) {
+    console.warn(`No ${filename} found, using defaults`);
+  }
+  return null;
+};
+
 export const calculateMainVideoMetadata: CalculateMetadataFunction<
   MainVideoProps
 > = async ({ props }) => {
   const fps = 30;
-  const slideDurationInFrames = fps * 5;
 
   console.log(`\n========== METADATA CALCULATION ==========`);
   console.log(`Content Directory: ${props.contentDirectory}`);
+
+  // Load video config (backgroundMode, introDurationInFrames, imageDurationInFrames)
+  const videoConfig = await loadJsonConfig(props.contentDirectory, 'video-config.json');
+  const backgroundMode = (videoConfig?.backgroundMode as boolean) ?? props.backgroundMode ?? false;
+  const introDurationInFrames = (videoConfig?.introDurationInFrames as number) ?? props.introDurationInFrames;
+  const imageDurationInFrames = (videoConfig?.imageDurationInFrames as number) ?? props.imageDurationInFrames;
+
+  // Load intro config from JSON file (overrides introProps defaults)
+  const introConfig = await loadJsonConfig(props.contentDirectory, 'intro-config.json');
+  if (introConfig?.backgroundImage && !(introConfig.backgroundImage as string).startsWith('http') && !(introConfig.backgroundImage as string).startsWith('/')) {
+    introConfig.backgroundImage = staticFile(introConfig.backgroundImage as string);
+  }
+  const introProps = introConfig
+    ? { ...props.introProps, ...introConfig }
+    : props.introProps;
 
   // Dynamically load assets from contentDirectory if not provided
   const images = (!props.images || props.images.length === 0)
@@ -55,13 +89,10 @@ export const calculateMainVideoMetadata: CalculateMetadataFunction<
   // Get audio duration (default to 0 if no audio)
   const audioDuration = audioSrc ? await getAudioDuration(audioSrc) : 0;
 
-  // Determine if background mode (intro plays entire video)
-  const isBackgroundMode = props.introDurationInFrames === 0;
-
   // Calculate total duration in seconds
-  const introDurationInSeconds = props.introDurationInFrames / fps;
+  const introDurationInSeconds = introDurationInFrames / fps;
   const slideshowDurationSec = audioDuration > 0 ? audioDuration : images.length * 5;
-  const contentDurationSec = isBackgroundMode
+  const contentDurationSec = backgroundMode
     ? slideshowDurationSec
     : introDurationInSeconds + slideshowDurationSec;
 
@@ -75,12 +106,15 @@ export const calculateMainVideoMetadata: CalculateMetadataFunction<
     height: 1920,
     props: {
       ...props,
+      introProps,
+      backgroundMode,
+      introDurationInFrames,
       images,
       videos: [],
       audioSrc: audioSrc || undefined,
       videoDurations: [],
       captions,
-      imageDurationInFrames: slideDurationInFrames,
+      imageDurationInFrames,
     },
   };
 };
