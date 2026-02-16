@@ -12,7 +12,10 @@ or
 ```bash
 npm run dev
 ```
-
+--
+"orientation": "vertical",
+horizontal
+---
 
 ## Folder Structure
 

@@ -13,6 +13,7 @@ export const RemotionRoot: React.FC = () => {
         schema={mainVideoSchema}
         defaultProps={{
           contentDirectory: "main/video_4",
+          orientation: "vertical",
           introProps: {
             templateId: "template_1",
             title: "Loạt cổ phiếu ngân hàng, chứng khoán tăng trần",

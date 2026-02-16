@@ -26,6 +26,9 @@ export const mainVideoSchema = z.object({
   // Captions
   captions: z.array(z.any()).optional().describe('Optional captions array'),
 
+  // Video orientation
+  orientation: z.enum(['vertical', 'horizontal']).default('vertical').describe('Video orientation: vertical (1080x1920) or horizontal (1920x1080)'),
+
   // Timing
   backgroundMode: z.boolean().default(false).describe('When true, intro overlay stays for entire video with images playing behind'),
   introDurationInFrames: z.number().describe('Intro duration in frames (only used when backgroundMode is false)'),

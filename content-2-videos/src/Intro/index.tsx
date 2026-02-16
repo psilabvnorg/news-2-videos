@@ -1,4 +1,4 @@
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill, Img, staticFile, useVideoConfig } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { z } from 'zod';
 import { zColor } from '@remotion/zod-types';
@@ -173,12 +173,13 @@ const useSocialIcons = (props: IntroProps, icons: string[], templatePath: (asset
  */
 export const IntroOverlay: React.FC<IntroOverlayProps> = (props) => {
   const { isBackgroundMode = false } = props;
+  const { height } = useVideoConfig();
   const assets = useTemplateAssets(props);
   const socialIcons = useSocialIcons(props, assets.icons, assets.templatePath);
 
   // Background mode: bottom half layout
   if (isBackgroundMode) {
-    const bottomHalfStart = 960;
+    const bottomHalfStart = height / 2;
     const contentPadding = 40;
 
     return (
