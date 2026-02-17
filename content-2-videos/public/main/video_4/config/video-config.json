@@ -1,6 +1,6 @@
 {
-  "orientation": "horizontal",
-  "backgroundMode": false,
+  "orientation": "vertical",
+  "backgroundMode": true,
   "introDurationInFrames": 150,
   "imageDurationInFrames": 170
 }

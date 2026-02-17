@@ -1,9 +1,9 @@
 {
   "templateId": "template_2",
-  "title": "Xe dien cho hang ps 69",
-  "brandName": "PSIxxxx.VN",
-  "tagline": "KÊNH xxx 69 KINH - CHÍNH TRỊ - XÃ HỘI",
-  "url": "https://psixxx69.vn",
+  "title": "Xe dien cho hang ps 69 6969696",
+  "brandName": "xechohang.VN",
+  "tagline": "Clone Youtube",
+  "url": "https://xechohang.vn",
   "backgroundImage": "main/video_4/image/Intro.jpg",
   "gradientTopColor": "rgba(10, 10, 26, 0.7)",
   "gradientBottomColor": "rgba(0, 0, 0, 0.85)",
@@ -29,7 +29,6 @@
   "enableAudio": false,
   "audioVolume": 0.3,
   "animationSpeed": 1,
-
   "vertical": {
     "topLogoX": 960,
     "topLogoY": 30,
